@@ -24,9 +24,8 @@ This Flutter Task Manager App is a versatile solution for individuals and teams 
 
 - **User-Friendly Interface:** Clean and modern design for an intuitive user experience.
 - **Real-Time Task Updates:** Instant updates on task progress with Firebase's real-time database.
-- **Task Categorization:** Organize tasks by priority, due date, or project with customizable tags.
 - **User Authentication:** Secure user authentication powered by Firebase, with customizable roles and permissions.
-- **Cloud Storage for Attachments:** Attach files to tasks using Firebase Cloud Storage for centralized resource management.
+ management.
 - **Push Notifications:** Stay informed with timely alerts for approaching due dates or important updates.
 - **Analytics Dashboard:** Gain insights into task performance and team productivity with a comprehensive analytics dashboard.
 - **Offline Support:** Create, edit, and manage tasks offline with automatic synchronization upon reconnection.
@@ -74,9 +73,9 @@ flutter-task-manager/
 |   |   |-- task_card.dart
 |   |   |-- user_avatar.dart
 |   |   |-- ...
-|-- assets/
-|   |-- images/
-|   |   |-- app_logo.png
+|
+|-- images/
+|   |-- app_logo.png
 |   |   |-- ...
 |-- pubspec.yaml
 |-- main.dart
