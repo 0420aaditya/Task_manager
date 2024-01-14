@@ -74,9 +74,9 @@ flutter-task-manager/
 |   |   |-- task_card.dart
 |   |   |-- user_avatar.dart
 |   |   |-- ...
-|-- assets/
-|   |-- images/
-|   |   |-- app_logo.png
+|
+|-- images/
+|   |-- app_logo.png
 |   |   |-- ...
 |-- pubspec.yaml
 |-- main.dart
