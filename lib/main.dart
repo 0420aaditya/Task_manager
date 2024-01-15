@@ -38,6 +38,7 @@
 // }
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager/auth/main_page.dart';
 import 'package:task_manager/firebase_options.dart';
@@ -47,7 +48,17 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //call the function for notification on background
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
+}
+
+//Run the notification in the background
+//This should be the top level function
+@pragma('vm:entry-point') //firebase bg service start garxa
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print(message.notification!.title.toString()); //print in console
 }
 
 class MyApp extends StatelessWidget {
