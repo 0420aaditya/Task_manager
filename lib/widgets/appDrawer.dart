@@ -28,12 +28,25 @@ class AppDrawer extends StatelessWidget {
                   radius: 40,
                 ),
                 SizedBox(height: 10),
-                Text(
-                  'Everyday is a chance to be better',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Everyday is a chance to be ',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'Better',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20, // Adjust the font size for 'Better'
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
