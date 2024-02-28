@@ -24,7 +24,7 @@ class AppDrawer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CircleAvatar(
-                  backgroundImage: AssetImage('../images/profile1.png'),
+                  backgroundImage: AssetImage('images/profile1.png'),
                   radius: 40,
                 ),
                 SizedBox(height: 10),

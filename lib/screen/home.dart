@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:task_manager/const/colors.dart';
 import 'package:task_manager/notificationServices.dart';
 import 'package:task_manager/screen/add_note_screen.dart';
+import 'package:task_manager/screen/settings.dart';
 import 'package:task_manager/widgets/appDrawer.dart';
 import 'package:task_manager/widgets/stream_note.dart';
 
@@ -17,22 +18,22 @@ bool show = true;
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class _Home_ScreenState extends State<Home_Screen> {
-  //for notification
-  NotificationServices notificationServices = NotificationServices();
   @override
   void initState() {
-    // TODO: implement initState
+    //listenToNotifications();
     super.initState();
-    notificationServices.requestNotificationPermission();
-    //notificationServices.isTokenRefresh();
-    notificationServices.initFirebaseNotification();
-    //to refresh token
-    notificationServices.getDeviceToken().then((value) {
-      print('Device Token:');
-      print(value);
-    });
   }
-  //up to here notification
+
+  //to listen to any notification clicked or not
+  // listenToNotifications() {
+  //   print('Listening to the notification');
+  //   NotificationService.onClickNotification.stream.listen((event) {
+  //     Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //             builder: (context) => SettingsPage(payload: event)));
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,10 @@ class _Home_ScreenState extends State<Home_Screen> {
         visible: show,
         child: FloatingActionButton(
           onPressed: () {
+            NotificationService.showNotification(
+                title: 'Test',
+                body: 'Works Fine!',
+                payload: "Is a simple payload");
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => Add_creen(),
             ));

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/const/colors.dart';
 import 'package:task_manager/data/firestor.dart';
+import 'package:task_manager/notificationServices.dart';
+import 'package:task_manager/widgets/datePicker.dart'; // Import the DateTimePickerButton widget
+import 'package:timezone/data/latest.dart' as tz;
 
 class Add_creen extends StatefulWidget {
-  const Add_creen({super.key});
+  const Add_creen({Key? key}) : super(key: key);
 
   @override
   State<Add_creen> createState() => _Add_creenState();
@@ -12,14 +15,25 @@ class Add_creen extends StatefulWidget {
 class _Add_creenState extends State<Add_creen> {
   final title = TextEditingController();
   final subtitle = TextEditingController();
+  DateTime? _selectedDateTime; // Define a variable to store the selected date
 
   FocusNode _focusNode1 = FocusNode();
   FocusNode _focusNode2 = FocusNode();
   int indexx = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationService.init();
+    tz.initializeTimeZones();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColors,
+      resizeToAvoidBottomInset:
+          false, // Add this line to prevent overflow by keyboard
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -27,6 +41,17 @@ class _Add_creenState extends State<Add_creen> {
             title_widgets(),
             SizedBox(height: 20),
             subtite_wedgite(),
+            SizedBox(height: 20),
+            DateTimePickerButton(
+              // Add the DateTimePickerButton widget
+              onChanged: (DateTime? dateTime) {
+                setState(() {
+                  _selectedDateTime = dateTime;
+                });
+              },
+              buttonText: 'Select Reminder Date and Time',
+              hintText: 'No date selected',
+            ),
             SizedBox(height: 20),
             imagess(),
             SizedBox(height: 20),
@@ -47,7 +72,12 @@ class _Add_creenState extends State<Add_creen> {
             minimumSize: Size(170, 48),
           ),
           onPressed: () {
-            Firestore_Datasource().AddNote(subtitle.text, title.text, indexx);
+            Firestore_Datasource().AddNote(subtitle.text, title.text, indexx,
+                _selectedDateTime); // Pass the selected date to the AddNote method
+            NotificationService.showScheduleNotification(
+                title: title.text,
+                body: subtitle.text,
+                scheduledDate: DateTime.now().add(Duration(seconds: 5)));
             Navigator.pop(context);
           },
           child: Text(
@@ -100,7 +130,7 @@ class _Add_creenState extends State<Add_creen> {
                 margin: EdgeInsets.all(8),
                 child: Column(
                   children: [
-                    Image.asset('../images/${index}.jpg'),
+                    Image.asset('images/${index}.jpg'),
                   ],
                 ),
               ),

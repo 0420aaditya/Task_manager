@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager/model/notes_model.dart';
+import 'package:task_manager/notificationServices.dart';
 import 'package:uuid/uuid.dart';
 
 class Firestore_Datasource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  get selectedDateTime => null;
   Future<bool> CreateUser(String email) async {
     try {
       await _firestore
@@ -21,10 +23,11 @@ class Firestore_Datasource {
     }
   }
 
-  Future<bool> AddNote(String subtitle, String title, int image) async {
+  Future<bool> AddNote(String subtitle, String title, int image,
+      DateTime? selectedDateTime) async {
     try {
       var uuid = Uuid().v4();
-      DateTime data = new DateTime.now();
+      DateTime data = DateTime.now();
       await _firestore
           .collection('users')
           .doc(_auth.currentUser!.uid)
@@ -37,11 +40,14 @@ class Firestore_Datasource {
         'image': image,
         'time': '${data.hour}:${data.minute}',
         'title': title,
+        'notiDate': selectedDateTime != null
+            ? selectedDateTime.toIso8601String()
+            : null,
       });
       return true;
     } catch (e) {
       print(e);
-      return true;
+      return false;
     }
   }
 
@@ -89,8 +95,8 @@ class Firestore_Datasource {
     }
   }
 
-  Future<bool> Update_Note(
-      String uuid, int image, String title, String subtitle) async {
+  Future<bool> Update_Note(String uuid, int image, String title,
+      String subtitle, _selectedDateTime) async {
     try {
       DateTime data = new DateTime.now();
       await _firestore
@@ -103,6 +109,9 @@ class Firestore_Datasource {
         'subtitle': subtitle,
         'title': title,
         'image': image,
+        'notiDate': selectedDateTime != null
+            ? selectedDateTime.toIso8601String()
+            : null,
       });
       return true;
     } catch (e) {
@@ -123,6 +132,33 @@ class Firestore_Datasource {
     } catch (e) {
       print(e);
       return true;
+    }
+  }
+  //schedule notification
+
+  Future<void> scheduleNotification(String uuid) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('notes')
+          .doc(uuid)
+          .get();
+
+      final Map<String, dynamic>? data = snapshot.data();
+      if (data != null) {
+        final String? notiDateString = data['notiDate'];
+        if (notiDateString != null) {
+          final DateTime notiDate = DateTime.parse(notiDateString);
+          await NotificationService.showScheduleNotification(
+            title: 'Reminder: ${data['title']}',
+            body: data['subtitle'],
+            scheduledDate: notiDate,
+          );
+        }
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

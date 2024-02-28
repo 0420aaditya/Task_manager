@@ -107,7 +107,7 @@ class _Task_WidgetState extends State<Task_Widget> {
               ),
               child: Row(
                 children: [
-                  Image.asset('../images/icon_time.png'),
+                  Image.asset('images/icon_time.png'),
                   SizedBox(width: 10),
                   Text(
                     /// `widget._note.time` is accessing the `time` property of the `_note` object. It
@@ -144,7 +144,7 @@ class _Task_WidgetState extends State<Task_Widget> {
                 ),
                 child: Row(
                   children: [
-                    Image.asset('../images/icon_edit.png'),
+                    Image.asset('images/icon_edit.png'),
                     SizedBox(width: 10),
                     Text(
                       'edit',
@@ -165,15 +165,24 @@ class _Task_WidgetState extends State<Task_Widget> {
 
   Widget imageee() {
     return Container(
-      height: 130,
-      width: 100,
+      height: 100,
+      width: 80,
       decoration: BoxDecoration(
         color: Colors.white,
         image: DecorationImage(
-          image: AssetImage('../images/${widget._note.image}.jpg'),
+          image: AssetImage('images/${widget._note.image}.jpg'),
           fit: BoxFit.cover,
         ),
       ),
     );
   }
 }
+
+
+// we can use the following to store the network image in the cache
+// CachedNetworkImage(
+//       imageUrl: 'images/${widget._note.image}.jpg',
+//       fit: BoxFit.cover,
+//       placeholder: (context, url) => CircularProgressIndicator(),
+//       errorWidget: (context, url, error) => Icon(Icons.error),
+//     ),

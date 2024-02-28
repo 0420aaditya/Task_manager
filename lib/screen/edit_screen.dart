@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/const/colors.dart';
 import 'package:task_manager/data/firestor.dart';
 import 'package:task_manager/model/notes_model.dart';
+import 'package:task_manager/widgets/datePicker.dart'; // Import the DateTimePickerButton widget
 
 class Edit_Screen extends StatefulWidget {
-  Note _note;
-  Edit_Screen(this._note, {super.key});
+  final Note _note;
+  Edit_Screen(this._note, {Key? key}) : super(key: key);
 
   @override
   State<Edit_Screen> createState() => _Edit_ScreenState();
@@ -14,21 +15,25 @@ class Edit_Screen extends StatefulWidget {
 class _Edit_ScreenState extends State<Edit_Screen> {
   TextEditingController? title;
   TextEditingController? subtitle;
+  DateTime? _selectedDateTime;
 
   FocusNode _focusNode1 = FocusNode();
   FocusNode _focusNode2 = FocusNode();
   int indexx = 0;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     title = TextEditingController(text: widget._note.title);
     subtitle = TextEditingController(text: widget._note.subtitle);
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColors,
+      resizeToAvoidBottomInset:
+          false, // Add this line to prevent overflow by keyboard
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -37,9 +42,19 @@ class _Edit_ScreenState extends State<Edit_Screen> {
             SizedBox(height: 20),
             subtite_wedgite(),
             SizedBox(height: 20),
+            DateTimePickerButton(
+              onChanged: (DateTime? dateTime) {
+                setState(() {
+                  _selectedDateTime = dateTime;
+                });
+              },
+              buttonText: 'Select Reminder Date & Time',
+              hintText: 'No date selected',
+            ),
+            SizedBox(height: 20),
             imagess(),
             SizedBox(height: 20),
-            button()
+            button(),
           ],
         ),
       ),
@@ -57,11 +72,16 @@ class _Edit_ScreenState extends State<Edit_Screen> {
           ),
           onPressed: () {
             Firestore_Datasource().Update_Note(
-                widget._note.id, indexx, title!.text, subtitle!.text);
+              widget._note.id,
+              indexx,
+              title!.text,
+              subtitle!.text,
+              _selectedDateTime,
+            );
             Navigator.pop(context);
           },
           child: Text(
-            'add task',
+            'Update Task',
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -109,7 +129,7 @@ class _Edit_ScreenState extends State<Edit_Screen> {
                 margin: EdgeInsets.all(8),
                 child: Column(
                   children: [
-                    Image.asset('../images/${index}.jpg'),
+                    Image.asset('images/${index}.jpg'),
                   ],
                 ),
               ),
@@ -133,23 +153,23 @@ class _Edit_ScreenState extends State<Edit_Screen> {
           focusNode: _focusNode1,
           style: TextStyle(fontSize: 18, color: Colors.black),
           decoration: InputDecoration(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              hintText: 'title',
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                  color: Color(0xffc5c5c5),
-                  width: 2.0,
-                ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            hintText: 'Title',
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: Color(0xffc5c5c5),
+                width: 2.0,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                  color: custom_green,
-                  width: 2.0,
-                ),
-              )),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: custom_green,
+                width: 2.0,
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -170,7 +190,7 @@ class _Edit_ScreenState extends State<Edit_Screen> {
           style: TextStyle(fontSize: 18, color: Colors.black),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            hintText: 'subtitle',
+            hintText: 'Subtitle',
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
